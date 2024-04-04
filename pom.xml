@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>lt.javau9</groupId>
-    <artifactId>palletsApi</artifactId>
+    <artifactId>PalletsApi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>palletsApi</name>
     <description>Application project for PalletsApi</description>
