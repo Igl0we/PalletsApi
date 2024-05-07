@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/api")
-public class PalletController {
+@RequestMapping("/api/pallets")
+public class ApiPalletController {
 
     private final PalletService palletService;
 
+
     @Autowired
-    public PalletController(PalletService palletService) {
+    public ApiPalletController(PalletService palletService) {
         this.palletService = palletService;
     }
 

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$CONTENT_TITLE | MyApp">MyApp</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 1em;
+            background-color: #d3d3d3;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item {
+            margin: 0 10px;
+            background-color: #c3c3c3;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .menu-item a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1em;
+            padding: 10px 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .menu-item:hover {
+            background-color: #b3b3b3;
+            transform: translateY(-2px);
+        }
+
+        .date-time {
+            margin-left: auto;
+            padding: 0.5em 1em;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="menu">
+        <div class="menu-item"><a href="/pallets/pallet-creation">Create Pallet</a></div>
+        <div class="menu-item"><a href="/pallets/all">List of Pallets</a></div>
+        <div class="menu-item"><a href="/list-order">List of Orders</a></div>
+    </div>
+    <div class="date-time" id="date-time"></div>
+</div>
+<div layout:fragment="content">
+    <!-- Page-specific content goes here -->
+</div>
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        const dateString = now.toLocaleDateString('lt-LT', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        const timeString = now.toLocaleTimeString('lt-LT', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+        document.getElementById('date-time').textContent = dateString + ' ' + timeString;
+    }
+
+    setInterval(updateDateTime, 1000); // Update the date and time every second
+    updateDateTime(); // Initial call to display immediately
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Pallet</title>
+</head>
+<body>
+<div layout:fragment="content"></div>
+<h1>Edit Pallet</h1>
+<form th:action="@{/pallets/update/{id}(id=${pallet.id})}" th:object="${pallet}" method="post">
+    <p>ID: <input type="text" th:field="*{id}" disabled="disabled"/></p>
+    <p>Name: <input type="text" th:field="*{name}"/></p>
+    <p><input type="submit" value="Update"/></p>
+</form>
+<form th:action="@{/pallets/delete/{id}(id=${pallet.id})}" method="post">
+    <input type="submit" value="Delete Pallet" onclick="return confirm('Are you sure you want to delete this pallet?');"/>
+</form>
+</body>
+</html>
+</body>
+</html>

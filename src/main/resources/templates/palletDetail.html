@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Pallet Details</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        table {
+            width: 50%;
+            background-color: #fff;
+            padding: 15px;
+            margin-top: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .details {
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .details strong {
+            color: #333;
+        }
+
+        .details span {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Pallet Details</h1>
+    <div class="details">
+        <p><strong>ID:</strong> <span th:text="${pallet.id}"></span></p>
+        <p><strong>Name:</strong> <span th:text="${pallet.name}"></span></p>
+        <p><strong>Price:</strong> <span th:text="${pallet.price}"></span></p>
+    </div>
+
+    <h2>Connector (Nail) Components</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Size</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="component : ${nails}">
+            <td th:text="${component.componentType}"></td>
+            <td th:text="${component.amount}"></td>
+            <td th:text="${component.size != null ? component.size + ' mm' : '-'}"></td>
+            <td th:text="${component.unitPrice != null ? component.unitPrice + ' per 1000' : '-'}"></td>
+            <td th:text="${component.price}"></td>
+            <td>
+                <a th:href="@{/pallets/{palletId}/components/{componentId}/edit(palletId=${pallet.id}, componentId=${component.id})}">Edit</a>
+                |
+                <a th:href="@{/pallets/{palletId}/components/{componentId}/delete(palletId=${pallet.id}, componentId=${component.id})}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Wood Components</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Width</th>
+            <th>Length</th>
+            <th>Height</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="component : ${others}">
+            <td th:text="${component.componentType}"></td>
+            <td th:text="${component.amount}"></td>
+            <td th:text="${component.width != null ? component.width + ' mm' : '-'}"></td>
+            <td th:text="${component.length != null ? component.length + ' mm' : '-'}"></td>
+            <td th:text="${component.height != null ? component.height + ' mm' : '-'}"></td>
+            <td th:text="${component.unitPrice != null ? component.unitPrice + ' per unit' : '-'}"></td>
+            <td th:text="${component.price}"></td>
+            <td>
+                <a th:href="@{/pallets/{palletId}/components/{componentId}/edit(palletId=${pallet.id}, componentId=${component.id})}">Edit</a>
+                |
+                <a th:href="@{/pallets/{palletId}/components/{componentId}/delete(palletId=${pallet.id}, componentId=${component.id})}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

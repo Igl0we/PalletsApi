@@ -61,6 +61,20 @@ public class PalletServiceImpl implements PalletService {
     }
 
     @Override
+    public boolean removeComponentFromPallet(Long palletId, Long componentId) {
+        Optional<Pallet> palletOptional = palletDatabase.findById(palletId);
+        if (palletOptional.isPresent()) {
+            Pallet pallet = palletOptional.get();
+            boolean removed = pallet.removeComponentById(componentId);
+            if (removed) {
+                palletDatabase.save(pallet); // Save the updated pallet back to the database
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean deletePalletById(Long id) {
         if (palletDatabase.existsById(id)) {
             palletDatabase.deleteById(id);
@@ -69,6 +83,7 @@ public class PalletServiceImpl implements PalletService {
 
         return false;
     }
+
 }
 
 

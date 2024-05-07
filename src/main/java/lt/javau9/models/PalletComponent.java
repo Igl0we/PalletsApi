@@ -35,7 +35,7 @@ public class PalletComponent {
         this.length = length / 1000;
         this.height = height / 1000;
         this.priceM3 = price;
-        this.price = amount * calculatePrice();
+        //this.price = amount * calculatePrice();
     }
 
     public PalletComponent(ComponentType componentType, int amount, double size, double unitPrice) {
@@ -43,8 +43,8 @@ public class PalletComponent {
         this.componentType = componentType;
         this.size = size;
         this.amount = amount;
-        this.unitPrice = price;
-        this.price = amount * unitPrice / 1000;
+        this.unitPrice = unitPrice;
+        //this.price = amount * unitPrice / 1000;
 
     }
 
@@ -57,7 +57,7 @@ public class PalletComponent {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
@@ -65,7 +65,7 @@ public class PalletComponent {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(double length) {
         this.length = length;
     }
 
@@ -73,7 +73,7 @@ public class PalletComponent {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
@@ -116,5 +116,29 @@ public class PalletComponent {
 
     private double calculatePrice() {
         return (width * length * height) * priceM3;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public List<Pallet> getPallets() {
+        return pallets;
     }
 }

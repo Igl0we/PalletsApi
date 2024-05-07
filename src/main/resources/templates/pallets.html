@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Pallet List</title>
+    <style>
+        table {
+            width: 80%; /* Adjust table width */
+            border-collapse: collapse; /* Collapse borders */
+            margin: 20px auto; /* Center table and add margin */
+        }
+
+        th, td {
+            padding: 10px; /* Add padding */
+            text-align: center; /* Center text */
+            border-bottom: 1px solid #ddd; /* Add bottom border for each row */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Light gray background for header */
+        }
+
+        tr:last-child td {
+            border-bottom: none; /* Remove bottom border for last row */
+        }
+
+        .button-link {
+            padding: 5px 10px;
+            margin-right: 5px; /* Right margin for spacing between buttons */
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            background-color: rgba(0, 123, 255, 0.52); /* Bootstrap blue for view button */
+            display: inline-block;
+        }
+
+        .button-link:hover {
+            background-color: rgb(73, 132, 246); /* Darker blue on hover */
+            text-decoration: none; /* Ensures no underline on hover */
+        }
+
+        .edit-button {
+            background-color: rgba(255, 7, 7, 0.68); /* Bootstrap yellow for edit button */
+        }
+
+        .edit-button:hover {
+            background-color: #df3b3b;
+        }
+
+        .order-button {
+            background-color: rgba(40, 167, 69, 0.66); /* Bootstrap green for order button */
+        }
+
+        .order-button:hover {
+            background-color: #2bcc50;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Pallet List</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Unit Price</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pallet : ${pallets}">
+            <td th:text="${pallet.id}"></td>
+            <td th:text="${pallet.name}"></td>
+            <td th:text="${pallet.price}"></td>
+            <td>
+                <a class="button-link" th:href="@{/pallets/{id}(id=${pallet.id})}">View</a>
+                <a class="button-link edit-button" th:href="@{/pallets/edit/{id}(id=${pallet.id})}">Edit</a>
+                <a class="button-link order-button" th:href="@{/pallets/make-order/{id}(id=${pallet.id})}">Make
+                    Order</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

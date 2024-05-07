@@ -3,6 +3,7 @@ package lt.javau9.models;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
@@ -16,7 +17,7 @@ public class Pallet {
     private double price;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "pallets",
             joinColumns = @JoinColumn(name = "pallet_id"),
@@ -31,7 +32,7 @@ public class Pallet {
 
     public Pallet(String name) {
         this.name = name;
-        this.price = getTotalPrice();
+
     }
 
     public Long getId() {
@@ -68,8 +69,8 @@ public class Pallet {
         this.price = price;
     }
 
-    public double getTotalPrice() {
-        return components.stream().mapToDouble(PalletComponent::getPrice).sum();
+    public void getTotalPrice() {
+        this.price = components.stream().mapToDouble(PalletComponent::getPrice).sum();
     }
 
     public List<PalletComponent> getComponents() {
@@ -84,5 +85,17 @@ public class Pallet {
         palletComponent.addPallet(this);
         components.add(palletComponent);
         return this;
+    }
+
+    public boolean removeComponentById(Long componentId) {
+        Iterator<PalletComponent> iterator = components.iterator();
+        while (iterator.hasNext()) {
+            PalletComponent component = iterator.next();
+            if (component.getId().equals(componentId)) {
+                iterator.remove();
+                return true;
+            }
+        }
+        return false;
     }
 }

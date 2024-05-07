@@ -18,4 +18,8 @@ public interface PalletService {
     Optional<Pallet> updatePallet(Long id, Pallet pallet);
 
     boolean deletePalletById(Long id);
+
+    boolean removeComponentFromPallet(Long palletId, Long componentId);
+
+
 }

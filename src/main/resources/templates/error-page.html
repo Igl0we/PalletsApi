@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 50px;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .error-container {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 20px;
+            margin: auto;
+            max-width: 500px;
+        }
+
+        a {
+            color: #004085;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <h1>An Error Occurred</h1>
+    <p th:text="${errorMessage != null ? errorMessage : 'Sorry, an unexpected error has occurred.'}"></p>
+    <p>
+        <a href="/">Go back to the homepage</a> or try again later.
+    </p>
+</div>
+</body>
+</html>

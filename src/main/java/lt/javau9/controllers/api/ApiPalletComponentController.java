@@ -11,13 +11,13 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/component")
-public class PalletComponentController {
+public class ApiPalletComponentController {
 
 
-    PalletComponentService palletComponentService;
+    private final PalletComponentService palletComponentService;
 
     @Autowired
-    public PalletComponentController(PalletComponentService palletComponentService) {
+    public ApiPalletComponentController(PalletComponentService palletComponentService) {
         this.palletComponentService = palletComponentService;
     }
 
