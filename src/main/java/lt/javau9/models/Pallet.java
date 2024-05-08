@@ -17,7 +17,7 @@ public class Pallet {
     private double price;
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "pallets",
             joinColumns = @JoinColumn(name = "pallet_id"),

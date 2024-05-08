@@ -83,6 +83,7 @@ public class PalletController {
         });
 
         components.values().forEach(newPallet::addComponent);
+        newPallet.getTotalPrice();
         palletService.addPallet(newPallet);
 
         return "redirect:/pallets/all";
@@ -90,9 +91,14 @@ public class PalletController {
 
     @GetMapping("/all")
     public String listPallets(Model model) {
-        Collection<Pallet> pallets = palletService.getAllPallets();
-        model.addAttribute("pallets", pallets);
-        return "pallets"; // This refers to 'pallets.html' in your templates directory
+        try {
+            Collection<Pallet> pallets = palletService.getAllPallets();
+            model.addAttribute("pallets", pallets);
+            return "pallets";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error accessing database: " + e.getMessage());
+            return "error-page";
+        }
     }
 
     @GetMapping("/{id}")

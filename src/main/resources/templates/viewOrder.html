@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>View Order</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Order Details</h1>
+    <div>
+        <p><strong>ID:</strong> <span th:text="${order.id}"></span></p>
+        <p><strong>Customer Name:</strong> <span th:text="${order.customerName}"></span></p>
+        <p><strong>Customer Address:</strong> <span th:text="${order.customerAddress}"></span></p>
+        <p><strong>Order Date:</strong> <span th:text="${order.orderDate}"></span></p>
+        <p><strong>Expiry Date:</strong> <span th:text="${order.expiryDate}"></span></p>
+        <p><strong>Pallet Name:</strong> <span th:text="${order.pallet.name}"></span></p>
+        <p><strong>Quantity:</strong> <span th:text="${order.quantity}"></span></p>
+        <p><strong>Total Price:</strong> <span th:text="${order.totalPrice}"></span></p>
+
+        <h2>Pallet Components</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Size/Dimensions</th>
+                <th>Unit Price</th>
+                <th>Total Component Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="component : ${order.pallet.components}">
+                <td th:text="${component.componentType}"></td>
+                <td th:text="${component.amount}"></td>
+                <td th:text="${component.size != 0 ? component.size + ' mm' : (component.width + 'x' + component.length + 'x' + component.height + ' mm')}"></td>
+                <td th:text="${component.unitPrice != 0 ? component.unitPrice : component.priceM3 + ' per m³'}"></td>
+                <td th:text="${component.price}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <form th:action="@{/orders/delete/{id}(id=${order.id})}" method="post">
+        <input type="submit" value="Delete Order"
+               onclick="return confirm('Are you sure you want to delete this order?');"/>
+    </form>
+</div>
+</body>
+</html>

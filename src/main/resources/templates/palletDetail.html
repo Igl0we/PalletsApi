@@ -69,7 +69,6 @@
         <p><strong>Name:</strong> <span th:text="${pallet.name}"></span></p>
         <p><strong>Price:</strong> <span th:text="${pallet.price}"></span></p>
     </div>
-
     <h2>Connector (Nail) Components</h2>
     <table>
         <thead>
@@ -107,7 +106,6 @@
             <th>Width</th>
             <th>Length</th>
             <th>Height</th>
-            <th>Unit Price</th>
             <th>Total Price</th>
             <th>Action</th>
         </tr>
@@ -119,7 +117,6 @@
             <td th:text="${component.width != null ? component.width + ' mm' : '-'}"></td>
             <td th:text="${component.length != null ? component.length + ' mm' : '-'}"></td>
             <td th:text="${component.height != null ? component.height + ' mm' : '-'}"></td>
-            <td th:text="${component.unitPrice != null ? component.unitPrice + ' per unit' : '-'}"></td>
             <td th:text="${component.price}"></td>
             <td>
                 <a th:href="@{/pallets/{palletId}/components/{componentId}/edit(palletId=${pallet.id}, componentId=${component.id})}">Edit</a>

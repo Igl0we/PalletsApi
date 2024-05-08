@@ -1,5 +1,6 @@
 package lt.javau9.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lt.javau9.models.enums.ComponentType;
 
@@ -22,7 +23,8 @@ public class PalletComponent {
     double size;
 
 
-    @ManyToMany(mappedBy = "components")
+    @ManyToMany(mappedBy = "components", cascade = CascadeType.ALL)
+    @JsonIgnore
     List<Pallet> pallets = new ArrayList<>();
 
     public PalletComponent() {
@@ -35,7 +37,7 @@ public class PalletComponent {
         this.length = length / 1000;
         this.height = height / 1000;
         this.priceM3 = price;
-        //this.price = amount * calculatePrice();
+        this.price = amount * calculatePrice();
     }
 
     public PalletComponent(ComponentType componentType, int amount, double size, double unitPrice) {
@@ -44,7 +46,7 @@ public class PalletComponent {
         this.size = size;
         this.amount = amount;
         this.unitPrice = unitPrice;
-        //this.price = amount * unitPrice / 1000;
+        this.price = amount * unitPrice / 1000;
 
     }
 

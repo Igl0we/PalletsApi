@@ -13,8 +13,7 @@ import java.util.Collection;
 public class ApiPalletController {
 
     private final PalletService palletService;
-
-
+    
     @Autowired
     public ApiPalletController(PalletService palletService) {
         this.palletService = palletService;

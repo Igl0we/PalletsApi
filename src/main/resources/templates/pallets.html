@@ -64,7 +64,7 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Unit Price</th>
+            <th>Price</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -76,8 +76,9 @@
             <td>
                 <a class="button-link" th:href="@{/pallets/{id}(id=${pallet.id})}">View</a>
                 <a class="button-link edit-button" th:href="@{/pallets/edit/{id}(id=${pallet.id})}">Edit</a>
-                <a class="button-link order-button" th:href="@{/pallets/make-order/{id}(id=${pallet.id})}">Make
-                    Order</a>
+                <a class="button-link order-button" th:href="@{/orders/create/{id}(id=${pallet.id})}">Make Order</a>
+
+
             </td>
         </tr>
         </tbody>

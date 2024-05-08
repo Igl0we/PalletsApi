@@ -5,7 +5,7 @@
     <title>Edit Pallet</title>
 </head>
 <body>
-<div layout:fragment="content"></div>
+<div layout:fragment="content">
 <h1>Edit Pallet</h1>
 <form th:action="@{/pallets/update/{id}(id=${pallet.id})}" th:object="${pallet}" method="post">
     <p>ID: <input type="text" th:field="*{id}" disabled="disabled"/></p>

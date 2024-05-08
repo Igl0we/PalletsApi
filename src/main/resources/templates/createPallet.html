@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Create Pallet</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0; /* Added padding to prevent content from sticking to the edges */
+            display: block; /* Default display to avoid forced centering */
+        }
+
+        form {
+            width: 50%; /* Adjust width as necessary, centered */
+            margin: auto; /* Center the form horizontally */
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .component-container {
+            border: 1px solid #ccc; /* Light grey border for visibility */
+            padding: 5px;
+            margin-bottom: 10px; /* Space between component blocks */
+        }
+
+        select, button {
+            padding: 2px;
+            margin: 4px 0; /* Spacing between form items */
+            width: calc(100% - 22px); /* Full width within the form, accounting for padding */
+        }
+
+        input {
+            padding: 2px;
+            margin: auto; /* Spacing between form items */
+            width: 11%;
+
+        }
+
+        button {
+            background-color: #4CAF50; /* Green background for buttons */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script type="text/javascript">
+        let componentIndex = 0; // Global index to track the number of components
+
+        function addComponent() {
+            componentIndex++;
+            var container = document.getElementById("componentsContainer");
+            var html = `
+                <div class="component-container" id="component-${componentIndex}">
+                    <select name="componentType-${componentIndex}" onchange="toggleFields(this, ${componentIndex})">
+                        <option value="">Choose type</option>
+                        <option value="TOPBOARD">TOPBOARD</option>
+                        <option value="MIDDLEBOARD">MIDDLEBOARD</option>
+                        <option value="BOTTOMBOARD">BOTTOMBOARD</option>
+                        <option value="BLOCK">BLOCK</option>
+                        <option value="BEAM">BEAM</option>
+                        <option value="NAIL">NAIL</option>
+                    </select>
+                    Amount: <input type="number" name="amount-${componentIndex}" required>
+                    <div id="nailFields-${componentIndex}" style="display: none;">
+                        Size: <input type="number" name="size-${componentIndex}">
+                        Unit Price: <input type="number" name="unitPrice-${componentIndex}">
+                    </div>
+                    <div id="boardFields-${componentIndex}" style="display: none;">
+                        Width: <input type="number" name="width-${componentIndex}">
+                        Length: <input type="number" name="length-${componentIndex}">
+                        Height: <input type="number" name="height-${componentIndex}">
+                        Price M3: <input type="number" name="priceM3-${componentIndex}">
+                    </div>
+                    <button type="button" onclick="removeComponent(${componentIndex})">Remove</button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeComponent(index) {
+            var element = document.getElementById(`component-${index}`);
+            element.parentNode.removeChild(element);
+        }
+
+        function toggleFields(selectElement, count) {
+            var type = selectElement.value;
+            document.getElementById(`nailFields-${count}`).style.display = type === "NAIL" ? "inline" : "none";
+            document.getElementById(`boardFields-${count}`).style.display = type !== "NAIL" && type !== "" ? "inline" : "none";
+        }
+        
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Create New Pallet</h1>
+    <form action="/pallets/create" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <div id="componentsContainer"></div>
+        <button type="button" onclick="addComponent()">Add Component</button>
+        <button type="submit">Submit Pallet</button>
+    </form>
+</div>
+</body>
+</html>
