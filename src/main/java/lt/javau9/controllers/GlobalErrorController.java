@@ -1,22 +1,18 @@
 package lt.javau9.controllers;
 
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class GlobalErrorController implements ErrorController {
+@ControllerAdvice
+public class GlobalErrorController {
 
-    private static final String PATH = "/error";
-
-    @RequestMapping(PATH)
-    public String handleError(Model model) {
-        model.addAttribute("errorMessage", "A global error occurred. Please try again.");
-        return "error-page";
-    }
-
-    public String getErrorPath() {
-        return PATH;
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleException(Exception ex) {
+        ModelAndView modelAndView = new ModelAndView("error-page");
+        modelAndView.addObject("errorMessage");
+        return modelAndView;
     }
 }

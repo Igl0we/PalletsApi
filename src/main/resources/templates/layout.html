@@ -65,7 +65,6 @@
     <div class="date-time" id="date-time"></div>
 </div>
 <div layout:fragment="content">
-    <!-- Page-specific content goes here -->
 </div>
 <script>
     function updateDateTime() {
@@ -80,8 +79,8 @@
         document.getElementById('date-time').textContent = dateString + ' ' + timeString;
     }
 
-    setInterval(updateDateTime, 1000); // Update the date and time every second
-    updateDateTime(); // Initial call to display immediately
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
 </script>
 </body>
 </html>

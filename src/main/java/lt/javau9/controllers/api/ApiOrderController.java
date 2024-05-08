@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -20,35 +19,31 @@ public class ApiOrderController {
         this.orderService = orderService;
     }
 
-    // Add a new order
     @PostMapping
-    public ResponseEntity<Order> addOrder(@RequestBody Order order) {
+    public ResponseEntity<?> addOrder(@RequestBody Order order) {
         try {
             Order savedOrder = orderService.addOrder(order);
             return ResponseEntity.ok(savedOrder);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    // Get all orders
     @GetMapping
     public ResponseEntity<Collection<Order>> findAllOrders() {
         return ResponseEntity.ok(orderService.findAll());
     }
 
-    // Get a specific order by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Order> findOrderById(@PathVariable Long id) {
-        Optional<Order> order = orderService.findById(id);
-        return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> findOrderById(@PathVariable Long id) {
+        return orderService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Delete an order by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrderById(@PathVariable Long id) {
-        boolean isDeleted = orderService.deleteOrderById(id);
-        if (isDeleted) {
+    public ResponseEntity<?> deleteOrderById(@PathVariable Long id) {
+        if (orderService.deleteOrderById(id)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

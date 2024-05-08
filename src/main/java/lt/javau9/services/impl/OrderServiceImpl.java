@@ -32,21 +32,17 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("Pallet is required to create an order.");
         }
 
-        // Load the pallet to ensure it's valid and managed
         Pallet pallet = palletRepository.findById(order.getPallet().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid pallet ID: " + order.getPallet().getId()));
 
-        // Set the loaded pallet back to order
         order.setPallet(pallet);
         order.setTotalPrice(pallet.getPrice() * order.getQuantity());
 
-        // Set order and expiry dates only if not already set
         if (order.getOrderDate() == null) {
             order.setOrderDate(LocalDate.now());
             order.setExpiryDate(order.getOrderDate().plusWeeks(2));
         }
 
-        // Save the new order to the database
         return orderRepository.save(order);
     }
 

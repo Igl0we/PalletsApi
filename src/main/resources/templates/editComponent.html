@@ -1,24 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>Edit Component</title>
 </head>
 <body>
-<div layout:fragment="content"></div>
+<div layout:fragment="content">
 <h1>Edit Component</h1>
 <form th:action="@{/pallets/{palletId}/components/{componentId}/update(palletId=${palletId}, componentId=${component.id})}"
       th:object="${component}" method="post">
     <p>Amount: <input type="number" th:field="*{amount}"/></p>
 
-    <!-- Check if the componentType is NAIL using the enum name -->
     <div th:if="${component.componentType.name() == 'NAIL'}">
         <p>Size: <input type="number" th:field="*{size}"/></p>
         <p>Unit Price: <input type="number" th:field="*{unitPrice}"/></p>
     </div>
 
-    <!-- For other types of components -->
     <div th:if="${component.componentType.name() != 'NAIL'}">
         <p>Width: <input type="number" th:field="*{width}"/></p>
         <p>Length: <input type="number" th:field="*{length}"/></p>

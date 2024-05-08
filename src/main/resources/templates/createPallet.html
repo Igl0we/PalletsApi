@@ -7,39 +7,39 @@
             font-family: 'Arial', sans-serif;
             background: #f7f7f7;
             margin: 0;
-            padding: 0; /* Added padding to prevent content from sticking to the edges */
-            display: block; /* Default display to avoid forced centering */
+            padding: 0;
+            display: block;
         }
 
         form {
-            width: 50%; /* Adjust width as necessary, centered */
-            margin: auto; /* Center the form horizontally */
+            width: 50%;
+            margin: auto;
             padding: 10px;
             background: #fff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .component-container {
-            border: 1px solid #ccc; /* Light grey border for visibility */
+            border: 1px solid #ccc;
             padding: 5px;
-            margin-bottom: 10px; /* Space between component blocks */
+            margin-bottom: 10px;
         }
 
         select, button {
             padding: 2px;
-            margin: 4px 0; /* Spacing between form items */
-            width: calc(100% - 22px); /* Full width within the form, accounting for padding */
+            margin: 4px 0;
+            width: calc(100% - 22px);
         }
 
         input {
             padding: 2px;
-            margin: auto; /* Spacing between form items */
+            margin: auto;
             width: 11%;
 
         }
 
         button {
-            background-color: #4CAF50; /* Green background for buttons */
+            background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
@@ -50,7 +50,7 @@
         }
     </style>
     <script type="text/javascript">
-        let componentIndex = 0; // Global index to track the number of components
+        let componentIndex = 0;
 
         function addComponent() {
             componentIndex++;
@@ -93,7 +93,7 @@
             document.getElementById(`nailFields-${count}`).style.display = type === "NAIL" ? "inline" : "none";
             document.getElementById(`boardFields-${count}`).style.display = type !== "NAIL" && type !== "" ? "inline" : "none";
         }
-        
+
     </script>
 </head>
 <body>

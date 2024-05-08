@@ -4,11 +4,11 @@ import lt.javau9.models.PalletComponent;
 import lt.javau9.models.enums.ComponentType;
 import lt.javau9.repositories.PalletComponentRepository;
 import lt.javau9.services.PalletComponentService;
+import lt.javau9.services.PalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,32 +16,26 @@ import java.util.Optional;
 public class PalletComponentServiceImpl implements PalletComponentService {
 
     PalletComponentRepository palletComponentDatabase;
+    PalletService palletService;
 
     @Autowired
-    public PalletComponentServiceImpl(PalletComponentRepository palletComponentDatabase) {
+    public PalletComponentServiceImpl(PalletComponentRepository palletComponentDatabase, PalletService palletService) {
         this.palletComponentDatabase = palletComponentDatabase;
+        this.palletService = palletService;
     }
 
     @Override
     public boolean deleteComponentById(Long id) {
-        if (palletComponentDatabase.existsById(id)) {
-            palletComponentDatabase.deleteById(id);
-            return true;
-        }
-
-        return false;
-
+        if (!palletComponentDatabase.existsById(id)) return false;
+        palletComponentDatabase.deleteById(id);
+        return true;
     }
 
     @Override
     public Collection<PalletComponent> getAllPalletComponents() {
-        if (palletComponentDatabase != null) {
-            return palletComponentDatabase.findAll();
-        } else {
-            System.out.println("palletComponentDatabase is null");
-            return Collections.emptyList();
-        }
+        return palletComponentDatabase.findAll();
     }
+
 
     @Override
     public Optional<PalletComponent> getPalletComponentById(Long id) {
@@ -50,21 +44,31 @@ public class PalletComponentServiceImpl implements PalletComponentService {
 
     @Override
     public Optional<PalletComponent> updatePalletComponent(Long id, PalletComponent updatedComponent) {
-        Optional<PalletComponent> existingComponent = palletComponentDatabase.findById(id);
-        if (existingComponent.isPresent()) {
-            PalletComponent component = existingComponent.get();
-            // Set fields that you allow to be updated
-            component.setAmount(updatedComponent.getAmount());
-            component.setPriceM3(updatedComponent.getPriceM3());
-            component.setUnitPrice(updatedComponent.getUnitPrice());
-            // Calculate the price if it's dependent on other fields
-            component.setPrice(updatedComponent.getAmount() * updatedComponent.getUnitPrice()); // Simplified example
+        return palletComponentDatabase.findById(id).map(existingComponent -> {
+            existingComponent.setAmount(updatedComponent.getAmount());
+            existingComponent.setPriceM3(updatedComponent.getPriceM3());
+            existingComponent.setUnitPrice(updatedComponent.getUnitPrice());
+            existingComponent.setSize(updatedComponent.getSize());
 
-            // Save the updated component
-            return Optional.of(palletComponentDatabase.save(component));
-        }
-        return Optional.empty();
+            recalculateComponentPrice(existingComponent);
+
+            PalletComponent savedComponent = palletComponentDatabase.save(existingComponent);
+
+            palletService.updatePalletPrice(savedComponent.getPallets().stream().findFirst().orElse(null));
+
+            return savedComponent;
+        });
     }
+
+    private void recalculateComponentPrice(PalletComponent component) {
+        if (component.getComponentType() == ComponentType.NAIL) {
+            component.setPrice(component.getUnitPrice() * component.getAmount());
+        } else {
+            double volume = component.getWidth() * component.getLength() * component.getHeight() * component.getAmount();
+            component.setPrice(volume * component.getPriceM3());
+        }
+    }
+
 
     @Override
     public PalletComponent createComponentFromParams(ComponentType type, int amount, Map<String, String> params) {
@@ -80,4 +84,5 @@ public class PalletComponentServiceImpl implements PalletComponentService {
             return new PalletComponent(type, amount, width, length, height, priceM3);
         }
     }
+
 }

@@ -13,7 +13,7 @@ import java.util.Collection;
 public class ApiPalletController {
 
     private final PalletService palletService;
-    
+
     @Autowired
     public ApiPalletController(PalletService palletService) {
         this.palletService = palletService;
@@ -49,10 +49,6 @@ public class ApiPalletController {
                 ResponseEntity.ok().build() :
                 ResponseEntity.notFound().build();
     }
-    //@PostMapping("/update/{id}")
-    //public ResponseEntity<Pallet> updatePrice (@PathVariable Long id, @RequestBody Pallet pallet) {
-    //    return
-    //}
 
 
 }

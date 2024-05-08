@@ -19,4 +19,5 @@ public interface PalletComponentService {
 
     PalletComponent createComponentFromParams(ComponentType type, int amount, Map<String, String> params);
 
+
 }

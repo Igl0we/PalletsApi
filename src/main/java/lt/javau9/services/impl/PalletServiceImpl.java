@@ -2,15 +2,20 @@ package lt.javau9.services.impl;
 
 import lt.javau9.models.Pallet;
 import lt.javau9.models.PalletComponent;
+import lt.javau9.models.enums.ComponentType;
 import lt.javau9.repositories.PalletRepository;
 import lt.javau9.services.PalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class PalletServiceImpl implements PalletService {
 
     PalletRepository palletDatabase;
@@ -67,7 +72,7 @@ public class PalletServiceImpl implements PalletService {
             Pallet pallet = palletOptional.get();
             boolean removed = pallet.removeComponentById(componentId);
             if (removed) {
-                palletDatabase.save(pallet); // Save the updated pallet back to the database
+                palletDatabase.save(pallet);
                 return true;
             }
         }
@@ -82,6 +87,23 @@ public class PalletServiceImpl implements PalletService {
         }
 
         return false;
+    }
+
+    public void updatePalletPrice(Pallet pallet) {
+        if (pallet == null) return;
+
+        double totalPalletPrice = pallet.getComponents().stream()
+                .mapToDouble(PalletComponent::getPrice)
+                .sum();
+        pallet.setPrice(totalPalletPrice);
+        palletDatabase.save(pallet);
+    }
+
+    @Override
+    public List<PalletComponent> filterComponents(Pallet pallet, ComponentType type) {
+        return pallet.getComponents().stream()
+                .filter(c -> type == null || c.getComponentType() == type)
+                .collect(Collectors.toList());
     }
 
 }

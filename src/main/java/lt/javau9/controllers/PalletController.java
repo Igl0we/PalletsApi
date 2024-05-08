@@ -5,38 +5,50 @@ import jakarta.transaction.Transactional;
 import lt.javau9.models.Pallet;
 import lt.javau9.models.PalletComponent;
 import lt.javau9.models.enums.ComponentType;
-import lt.javau9.services.PalletComponentService;
 import lt.javau9.services.PalletService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
 @RequestMapping("/pallets")
 public class PalletController {
-    private static final Logger log = LoggerFactory.getLogger(PalletController.class);
 
     private final PalletService palletService;
-    private final PalletComponentService palletComponentService;
 
 
     @Autowired
-    public PalletController(PalletService palletService, PalletComponentService palletComponentService) {
+    public PalletController(PalletService palletService) {
         this.palletService = palletService;
-        this.palletComponentService = palletComponentService;
+
     }
 
     @GetMapping("/")
     public String index() {
         return "index";
+    }
+
+    @GetMapping("/all")
+    public String listPallets(Model model) {
+        model.addAttribute("pallets", palletService.getAllPallets());
+        return "pallets";
+    }
+
+    @GetMapping("/{id}")
+    public String getPalletDetails(@PathVariable Long id, Model model) {
+        return palletService.getPalletById(id).map(pallet -> {
+            model.addAttribute("pallet", pallet);
+            model.addAttribute("nails", palletService.filterComponents(pallet, ComponentType.NAIL));
+            model.addAttribute("others", palletService.filterComponents(pallet, null));
+            return "palletDetail";
+        }).orElse("redirect:/error-page");
     }
 
     @GetMapping("/pallet-creation")
@@ -89,39 +101,12 @@ public class PalletController {
         return "redirect:/pallets/all";
     }
 
-    @GetMapping("/all")
-    public String listPallets(Model model) {
-        try {
-            Collection<Pallet> pallets = palletService.getAllPallets();
-            model.addAttribute("pallets", pallets);
-            return "pallets";
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error accessing database: " + e.getMessage());
-            return "error-page";
-        }
-    }
-
-    @GetMapping("/{id}")
-    public String getPalletDetails(@PathVariable Long id, Model model) {
-        Pallet pallet = palletService.getPalletById(id).orElseThrow(() -> new IllegalArgumentException("Invalid pallet Id:" + id));
-        List<PalletComponent> nails = pallet.getComponents().stream()
-                .filter(c -> "NAIL".equalsIgnoreCase(c.getComponentType().name()))
-                .collect(Collectors.toList());
-        List<PalletComponent> others = pallet.getComponents().stream()
-                .filter(c -> !"NAIL".equalsIgnoreCase(c.getComponentType().name()))
-                .collect(Collectors.toList());
-
-        model.addAttribute("pallet", pallet);
-        model.addAttribute("nails", nails);
-        model.addAttribute("others", others);
-        return "palletDetail";
-    }
 
     @GetMapping("/edit/{id}")
     public String editPalletForm(@PathVariable Long id, Model model) {
         Optional<Pallet> pallet = palletService.getPalletById(id);
         model.addAttribute("pallet", pallet.orElse(new Pallet()));
-        return "palletEdit"; // Create 'palletEdit.html'
+        return "palletEdit";
     }
 
     @Transactional
@@ -131,32 +116,15 @@ public class PalletController {
         return "redirect:/pallets/all";
     }
 
-    @GetMapping("/{palletId}/components/{componentId}/edit")
-    public String editPalletComponent(@PathVariable Long palletId, @PathVariable Long componentId, Model model) {
-        Optional<PalletComponent> component = palletComponentService.getPalletComponentById(componentId);
-        if (component.isEmpty()) {
-            return "redirect:/pallets/" + palletId;
-        }
-        model.addAttribute("component", component.get());
-        model.addAttribute("palletId", palletId);
-        return "editComponent";
-    }
-
-    @PostMapping("/{palletId}/components/{componentId}/update")
-    public String updatePalletComponent(@PathVariable Long palletId, @PathVariable Long componentId, @ModelAttribute PalletComponent component) {
-        palletComponentService.updatePalletComponent(componentId, component);
-        return "redirect:/pallets/" + palletId;
-    }
 
     @PostMapping("/delete/{id}")
     public String deletePallet(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            palletService.deletePalletById(id);
+        if (palletService.deletePalletById(id)) {
             redirectAttributes.addFlashAttribute("successMessage", "Pallet deleted successfully.");
-            return "redirect:/pallets/all"; // Redirect to the list of pallets after deletion
-        } catch (Exception e) {
+            return "redirect:/pallets/all";
+        } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting pallet.");
-            return "redirect:/pallets/edit/{id}"; // Redirect back to the edit page if there's an error
+            return "redirect:/pallets/" + id;
         }
     }
 
@@ -165,9 +133,9 @@ public class PalletController {
     public String deleteComponent(@PathVariable Long palletId, @PathVariable Long componentId) {
         boolean removed = palletService.removeComponentFromPallet(palletId, componentId);
         if (removed) {
-            return "redirect:/pallets/" + palletId; // Redirect to the pallet details page
+            return "redirect:/pallets/" + palletId;
         } else {
-            return "redirect:/error-page"; // Or handle this more specifically if required
+            return "redirect:/error-page";
         }
     }
 }

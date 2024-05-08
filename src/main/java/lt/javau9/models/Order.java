@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "`order`")  // Note the use of backticks to quote the table name
+@Table(name = "`order`")
 public class Order {
 
     @Id
@@ -18,8 +18,8 @@ public class Order {
     private LocalDate orderDate;
     private LocalDate expiryDate;
 
-    @OneToOne  // Assuming each order has one pallet, but one pallet can be in many orders
-    @JoinColumn(name = "pallet_id") // This creates a column in the Order table for the pallet ID
+    @OneToOne
+    @JoinColumn(name = "pallet_id")
     private Pallet pallet;
     @Min(value = 1, message = "Quantity must be at least 1")
     private double quantity;
